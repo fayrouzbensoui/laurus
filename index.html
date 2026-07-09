@@ -56,8 +56,9 @@
   .seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 
   /* Grid: catalogue colour tiles, each showing the product package */
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;list-style:none;margin:0;padding:0}
-  .tile{display:flex;flex-direction:column;align-items:center;text-align:center;min-height:236px;padding:14px 12px 15px;border:none;border-radius:var(--radius);background:var(--c);color:var(--on);font:inherit;cursor:pointer;transition:transform .12s,box-shadow .14s}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;list-style:none;margin:0;padding:0;grid-auto-rows:1fr}
+  .grid>li{display:flex}
+  .tile{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;text-align:center;min-height:236px;padding:14px 12px 15px;border:none;border-radius:var(--radius);background:var(--c);color:var(--on);font:inherit;cursor:pointer;transition:transform .12s,box-shadow .14s}
   .tile:hover{box-shadow:0 14px 28px -12px color-mix(in srgb,var(--c) 70%,black)}
   .tile:active{transform:scale(.985)}
   .tile.onlight{--on:#1A1A1A}
@@ -66,9 +67,9 @@
   .tile-media{width:100%;height:134px;background:#fff;border-radius:12px;padding:9px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 5px 12px -5px rgba(0,0,0,.28)}
   .tile-media img{max-width:100%;max-height:116px;object-fit:contain;display:block}
   .tile-media svg{height:116px;width:auto}
-  .tile-name{font-weight:800;font-size:19px;letter-spacing:-.02em}
-  .tile-tag{font-size:12px;line-height:1.3;opacity:.94;margin-top:2px}
-  .tile-foot{font:500 11px var(--mono);opacity:.9;margin-top:8px}
+  .tile-name{font-weight:800;font-size:19px;letter-spacing:-.02em;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tile-tag{font-size:12px;line-height:1.3;opacity:.94;margin-top:2px;width:100%;min-height:2.6em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .tile-foot{font:500 11px var(--mono);opacity:.9;margin-top:auto;padding-top:8px;white-space:nowrap}
 
   /* List: dense, with a package thumbnail */
   .list{display:flex;flex-direction:column;gap:10px;list-style:none;margin:0;padding:0}
@@ -79,8 +80,8 @@
   .card-media img{max-width:100%;max-height:100%;object-fit:contain;display:block}
   .card-media svg{height:56px;width:auto}
   .card-body{min-width:0;flex:1}
-  .card-name{font-weight:700;font-size:17px;letter-spacing:-.01em}
-  .card-tag{font-size:13px;color:var(--ink-soft);margin-top:1px}
+  .card-name{display:block;font-weight:700;font-size:17px;letter-spacing:-.01em}
+  .card-tag{display:block;font-size:13px;color:var(--ink-soft);margin-top:1px}
   .card-meta{display:flex;align-items:center;gap:8px;margin-top:7px;flex-wrap:wrap}
   .pill{font-size:11px;font-weight:500;padding:3px 8px;border-radius:6px;background:var(--line-soft);color:var(--ink-soft)}
   .pill.brand{background:color-mix(in srgb,var(--c) 15%,white);color:color-mix(in srgb,var(--c) 72%,black)}
