@@ -17,7 +17,7 @@
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{margin:0;overflow-x:hidden;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   .wrap{max-width:var(--maxw);margin:0 auto}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
@@ -56,7 +56,7 @@
   .seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 
   /* Grid: catalogue colour tiles, each showing the product package */
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;list-style:none;margin:0;padding:0;grid-auto-rows:1fr}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;list-style:none;margin:0;padding:0;grid-auto-rows:1fr}
   .grid>li{display:flex}
   .tile{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;text-align:center;min-height:236px;padding:14px 12px 15px;border:none;border-radius:var(--radius);background:var(--c);color:var(--on);font:inherit;cursor:pointer;transition:transform .12s,box-shadow .14s}
   .tile:hover{box-shadow:0 14px 28px -12px color-mix(in srgb,var(--c) 70%,black)}
@@ -153,6 +153,40 @@
   @media (min-width:1180px){
     :root{--maxw:1120px}
   }
+  /* ===== Edit mode ===== */
+  .admin-bar{position:sticky;top:0;z-index:60;display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:#141719;color:#fff;padding:9px 16px}
+  .admin-bar .lbl{font:700 12px var(--font);letter-spacing:.02em}
+  .admin-bar .sp{flex:1 1 auto}
+  .admin-bar .dot{width:8px;height:8px;border-radius:50%;background:#7BC043;box-shadow:0 0 0 3px rgba(123,192,67,.25)}
+  .admin-bar.dirty .dot{background:#E5A93A;box-shadow:0 0 0 3px rgba(229,169,58,.25)}
+  .admin-btn{border:none;border-radius:8px;padding:7px 12px;font:600 12px var(--font);cursor:pointer;background:#2a2f33;color:#fff;transition:filter .12s}
+  .admin-btn:hover{filter:brightness(1.15)}
+  .admin-btn.primary{background:#A6CE39;color:#141719}
+  .admin-btn.ghost{background:transparent;color:#c9ced2;box-shadow:inset 0 0 0 1px #3a4045}
+  .edit-fab{margin:0 0 16px;display:inline-flex;align-items:center;gap:7px;border:none;border-radius:10px;padding:9px 15px;font:700 13px var(--font);cursor:pointer;background:#141719;color:#fff}
+  .ed-overlay{position:fixed;inset:0;z-index:120;background:rgba(15,18,20,.55);display:flex;justify-content:center;align-items:flex-start;padding:24px 14px;overflow:auto}
+  .ed{background:var(--paper);color:var(--ink);width:100%;max-width:620px;border-radius:16px;padding:20px 20px 24px;box-shadow:0 24px 60px -18px rgba(0,0,0,.55)}
+  .ed h3{margin:0 0 4px;font-size:19px;letter-spacing:-.01em}
+  .ed .sub{margin:0 0 14px;font-size:12.5px;color:var(--ink-soft);line-height:1.5}
+  .ed label{display:block;font:600 12px var(--font);color:var(--ink-soft);margin:14px 0 5px}
+  .ed input[type=text],.ed input[type=password],.ed textarea{width:100%;box-sizing:border-box;border:1.5px solid var(--line);border-radius:9px;padding:9px 11px;font:400 14px var(--font);color:var(--ink);background:#fff}
+  .ed input:focus,.ed textarea:focus{outline:none;border-color:var(--ink)}
+  .ed textarea{resize:vertical;min-height:64px;line-height:1.45}
+  .ed .row{display:flex;gap:10px}
+  .ed .row>div{flex:1;min-width:0}
+  .ed .rows{display:flex;flex-direction:column;gap:8px}
+  .ed .pair{display:flex;gap:8px;align-items:center}
+  .ed .pair input{flex:1;min-width:0}
+  .ed .mini{border:none;background:var(--line-soft);border-radius:7px;width:32px;height:32px;font-size:17px;line-height:1;cursor:pointer;flex:none;color:var(--ink)}
+  .ed .addline{align-self:flex-start;border:1.5px dashed var(--line);background:none;border-radius:8px;padding:6px 10px;font:600 12px var(--font);color:var(--ink-soft);cursor:pointer;margin-top:2px}
+  .ed-foot{display:flex;align-items:center;gap:10px;margin-top:22px}
+  .ed-foot .sp{flex:1}
+  .ed-foot .admin-btn{padding:10px 16px;font-size:13px}
+  .indication{margin:0;font-size:14.5px;line-height:1.55;color:var(--ink)}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:200;background:#141719;color:#fff;padding:11px 18px;border-radius:10px;font:600 13px var(--font);box-shadow:0 12px 32px -8px rgba(0,0,0,.5);opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;max-width:88vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+  .toast.err{background:#B4232A}
+
 </style>
 </head>
 <body>
@@ -213,7 +247,9 @@
     </svg>
   </div>
   <div class="qr-txt">
-    <p>Un seul QR ouvre ce catalogue - jamais une version figée,
+    <b>Ce que le représentant imprime</b>
+    <p>Un seul QR ouvre ce catalogue. Il pointe vers
+       <code>fayrouzbensoui.github.io/laurus</code> — jamais une version figée,
        donc aucune réimpression lors d'une mise à jour.</p>
   </div>
 </div>
@@ -231,7 +267,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-const P = [
+/*P_START*/const P = [
   {slug:"aftix",name:"Aftix",tag:"Aphtes buccaux",famille:"Bucco-dentaire",form:"Spray",volume:"30 ml",color:"#A6CE39",light:true,
    keywords:["aphte","stomatite","ulceration buccale","mycose buccale","bouche","gencive","prothese"],
    actifs:["Acide hyaluronique","Aloe Vera","Camomille","Calendula"],
@@ -339,7 +375,7 @@ const P = [
    posologie:[{age:"3 mois – 5 ans",dose:"5 ml / j"},{age:"5 ans – 15 ans",dose:"10 ml / j"},{age:"Adultes",dose:"15 ml / j"}],note:"",
    compo:"Pour 20 ml : Extrait d'Échinacée (Echinacea purpurea) 200 mg, Extrait de Cynorhodon (Rosa canina) 100 mg, Extrait d'Acérola (Malpighia glabra) 60 mg, Spiruline 250 mg, Zinc 0,3 mg, Cuivre 0,3 mg, Eau purifiée, Glycérine végétale, Acide citrique, Sorbate de potassium, Benzoate de sodium, Gomme xanthane, Sucralose, Arôme tropical.",
    conseils:["Bien agiter le flacon avant l'utilisation."]},
-];
+];/*P_END*/
 
 const bySlug = Object.fromEntries(P.map(p => [p.slug, p]));
 const familles = [...new Set(P.map(p => p.famille))];
@@ -484,6 +520,7 @@ function renderDetail(p){
       '<h1>' + p.name + '</h1><p>' + p.tag + '</p>' +
       '<div class="hero-facts"><span class="hfact">' + p.form + '</span><span class="hfact">' + p.volume + '</span>' +
       (p.sansSucre ? '<span class="hfact">Sans sucre</span>' : '') + '</div></div></div>' +
+    (p.indication ? '<section class="block"><h2>Indication d\'usage</h2><p class="indication">' + p.indication + '</p></section>' : '') +
     '<section class="block"><h2>Posologie</h2>' +
       '<table class="dosage ' + theme + '"><thead><tr><th scope="col">Âge</th><th scope="col">Dosage</th></tr></thead><tbody>' + rows + '</tbody></table>' +
       (p.note ? '<p class="dosage-note">' + p.note + '</p>' : '') + '</section>' +
@@ -529,6 +566,223 @@ function buildQR(){
 
 buildChips(); render(); route(); updateNet();
 if (window.QRCode) buildQR(); else window.addEventListener("load", () => window.QRCode && buildQR());
+
+/* ===================== EDIT MODE ===================== */
+(function(){
+  var qs = new URLSearchParams(location.search);
+  if (qs.has("admin")) sessionStorage.setItem("laurusAdmin","1");
+  if (sessionStorage.getItem("laurusAdmin") !== "1") return;
+
+  var GH = { owner:"fayrouzbensoui", repo:"laurus", path:"index.html", branch:"main" };
+  var dirty = false;
+
+  function E(t,c,h){ var e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e; }
+  function toast(msg,err){
+    var t=E("div","toast"+(err?" err":""),msg); document.body.appendChild(t);
+    requestAnimationFrame(function(){ t.classList.add("show"); });
+    setTimeout(function(){ t.classList.remove("show"); setTimeout(function(){ t.remove(); },250); }, err?4500:2400);
+  }
+  function setDirty(v){ dirty=v; var b=document.querySelector(".admin-bar"); if(b)b.classList.toggle("dirty",v); }
+  function currentSlug(){ var m=location.hash.match(/^#p\/(.+)$/); return m?m[1]:null; }
+
+  function refreshFamilles(){
+    var fresh=[]; P.forEach(function(p){ if(fresh.indexOf(p.famille)<0) fresh.push(p.famille); });
+    familles.length=0; fresh.forEach(function(f){ familles.push(f); });
+    buildChips();
+  }
+
+  /* ---- admin bar ---- */
+  function buildBar(){
+    if(document.querySelector(".admin-bar")) return;
+    var bar=E("div","admin-bar");
+    bar.append(E("span","dot"), E("span","lbl","MODE ÉDITION"), E("span","sp"));
+    var dl=E("button","admin-btn","⬇ Télécharger index.html"); dl.onclick=downloadHTML;
+    var pub=E("button","admin-btn primary","⏫ Publier sur GitHub"); pub.onclick=publishFlow;
+    var set=E("button","admin-btn ghost","⚙ Réglages"); set.onclick=ghSettings;
+    var out=E("button","admin-btn ghost","Quitter"); out.onclick=function(){ sessionStorage.removeItem("laurusAdmin"); location.href=location.pathname; };
+    bar.append(dl,pub,set,out);
+    document.body.prepend(bar);
+  }
+
+  /* ---- inject Edit button on detail ---- */
+  function decorate(){
+    var slug=currentSlug(); if(!slug) return;
+    var dv=el("detailView"); if(!dv || dv.style.display==="none") return;
+    if(dv.querySelector(".edit-fab")) return;
+    var p=bySlug[slug]; if(!p) return;
+    var fab=E("button","edit-fab","✏️ Éditer ce produit"); fab.onclick=function(){ openEditor(p); };
+    var back=dv.querySelector(".back");
+    if(back) back.after(fab); else dv.prepend(fab);
+  }
+
+  /* ---- reusable list / posology editors ---- */
+  function listEditor(items,ph){
+    var wrap=E("div","rows");
+    function line(v){
+      var row=E("div","pair"), inp=E("input"); inp.type="text"; inp.value=v||""; inp.placeholder=ph||"";
+      var del=E("button","mini","−"); del.onclick=function(){ row.remove(); };
+      row.append(inp,del); return row;
+    }
+    (items&&items.length?items:[""]).forEach(function(v){ wrap.append(line(v)); });
+    var add=E("button","addline","+ Ajouter"); add.onclick=function(){ wrap.insertBefore(line(""),add); };
+    wrap.append(add);
+    wrap._values=function(){ return [].slice.call(wrap.querySelectorAll("input")).map(function(i){return i.value.trim();}).filter(Boolean); };
+    return wrap;
+  }
+  function posoEditor(items){
+    var wrap=E("div","rows");
+    function line(a,d){
+      var row=E("div","pair");
+      var ia=E("input"); ia.type="text"; ia.value=a||""; ia.placeholder="Âge / population"; ia.style.flex="1.3";
+      var id=E("input"); id.type="text"; id.value=d||""; id.placeholder="Dosage";
+      var del=E("button","mini","−"); del.onclick=function(){ row.remove(); };
+      row.append(ia,id,del); return row;
+    }
+    (items&&items.length?items:[{age:"",dose:""}]).forEach(function(x){ wrap.append(line(x.age,x.dose)); });
+    var add=E("button","addline","+ Ligne de posologie"); add.onclick=function(){ wrap.insertBefore(line("",""),add); };
+    wrap.append(add);
+    wrap._values=function(){
+      return [].slice.call(wrap.querySelectorAll(".pair")).map(function(r){
+        var i=r.querySelectorAll("input"); return { age:i[0].value.trim(), dose:i[1].value.trim() };
+      }).filter(function(x){ return x.age||x.dose; });
+    };
+    return wrap;
+  }
+
+  /* ---- product editor ---- */
+  function openEditor(p){
+    var ov=E("div","ed-overlay"), ed=E("div","ed");
+    ed.append(E("h3",null,"Éditer — "+p.name));
+    ed.append(E("p","sub","Slug : "+p.slug+" · L’aperçu se met à jour immédiatement. Pensez à Publier ou Télécharger pour enregistrer."));
+
+    function text(v){ var i=E("input"); i.type="text"; i.value=v==null?"":v; return i; }
+    function area(v){ var t=E("textarea"); t.value=v==null?"":v; return t; }
+    function labeled(lbl,node){ ed.append(E("label",null,lbl)); ed.append(node); return node; }
+
+    var fName=text(p.name), fTag=text(p.tag);
+    var rNT=E("div","row"), dN=E("div"), dT=E("div");
+    dN.append(E("label",null,"Nom"),fName); dT.append(E("label",null,"Sous-titre"),fTag);
+    rNT.append(dN,dT); ed.append(rNT);
+
+    var fFam=text(p.famille), fForm=text(p.form), fVol=text(p.volume);
+    var rFV=E("div","row"), dFa=E("div"), dFo=E("div"), dVo=E("div");
+    dFa.append(E("label",null,"Famille"),fFam);
+    dFo.append(E("label",null,"Forme"),fForm);
+    dVo.append(E("label",null,"Volume"),fVol);
+    rFV.append(dFa,dFo,dVo); ed.append(rFV);
+
+    var fInd=labeled("Indication d’usage",area(p.indication));
+    var fNote=labeled("Note de posologie (optionnel)",area(p.note));
+
+    ed.append(E("label",null,"Posologie")); var ePoso=posoEditor(p.posologie); ed.append(ePoso);
+    ed.append(E("label",null,"Propriétés")); var eProps=listEditor(p.props,"Propriété"); ed.append(eProps);
+    ed.append(E("label",null,"Actifs")); var eAct=listEditor(p.actifs,"Actif"); ed.append(eAct);
+    var fCompo=labeled("Composition",area(p.compo));
+    ed.append(E("label",null,"Conseils d’utilisation")); var eCons=listEditor(p.conseils,"Conseil"); ed.append(eCons);
+    ed.append(E("label",null,"Mots-clés (recherche)")); var eKw=listEditor(p.keywords,"mot-clé"); ed.append(eKw);
+
+    var foot=E("div","ed-foot");
+    var bCancel=E("button","admin-btn ghost","Annuler"), bSave=E("button","admin-btn primary","Appliquer");
+    foot.append(bCancel,E("span","sp"),bSave); ed.append(foot);
+
+    bCancel.onclick=function(){ ov.remove(); };
+    ov.onclick=function(e){ if(e.target===ov) ov.remove(); };
+    bSave.onclick=function(){
+      p.name=fName.value.trim()||p.name;
+      p.tag=fTag.value.trim();
+      p.famille=fFam.value.trim()||p.famille;
+      p.form=fForm.value.trim(); p.volume=fVol.value.trim();
+      p.indication=fInd.value.trim();
+      p.note=fNote.value.trim();
+      p.posologie=ePoso._values();
+      p.props=eProps._values();
+      p.actifs=eAct._values();
+      p.compo=fCompo.value.trim();
+      p.conseils=eCons._values();
+      p.keywords=eKw._values();
+      refreshFamilles(); setDirty(true);
+      ov.remove(); render(); route(); decorate();
+      toast("Modifications appliquées");
+    };
+    ov.append(ed); document.body.appendChild(ov);
+  }
+
+  /* ---- regenerate index.html from pristine source ---- */
+  function serialize(){ return "/*P_START*/const P = "+JSON.stringify(P)+";/*P_END*/"; }
+  function buildUpdatedHTML(){
+    return fetch(location.href,{cache:"no-store"}).then(function(res){
+      if(!res.ok) throw new Error("Lecture de la source impossible ("+res.status+")");
+      return res.text();
+    }).then(function(src){
+      if(!/\/\*P_START\*\/[\s\S]*?\/\*P_END\*\//.test(src)) throw new Error("Marqueurs de données introuvables.");
+      return src.replace(/\/\*P_START\*\/[\s\S]*?\/\*P_END\*\//, serialize);
+    });
+  }
+  function downloadHTML(){
+    buildUpdatedHTML().then(function(html){
+      var blob=new Blob([html],{type:"text/html"}), a=document.createElement("a");
+      a.href=URL.createObjectURL(blob); a.download="index.html";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); },1000);
+      toast("index.html téléchargé — committez-le dans le dépôt");
+    }).catch(function(e){ toast(e.message,true); });
+  }
+
+  /* ---- GitHub settings + publish ---- */
+  function ghGet(k,def){ return localStorage.getItem("laurusGH_"+k)||def; }
+  function ghSettings(){
+    var ov=E("div","ed-overlay"), ed=E("div","ed");
+    ed.append(E("h3",null,"Réglages GitHub"));
+    ed.append(E("p","sub","Nécessaire pour publier automatiquement. Le token reste dans ce navigateur (session en cours) et n’est jamais inclus dans le fichier téléchargé. Utilisez un token fine-grained limité à ce dépôt avec la permission Contents : Read and write."));
+    function fld(lbl,val,type){ ed.append(E("label",null,lbl)); var i=E("input"); i.type=type||"text"; i.value=val||""; ed.append(i); return i; }
+    var iOwner=fld("Propriétaire (owner)",ghGet("owner",GH.owner));
+    var iRepo=fld("Dépôt (repo)",ghGet("repo",GH.repo));
+    var iBranch=fld("Branche",ghGet("branch",GH.branch));
+    var iTok=fld("Token","","password"); iTok.placeholder = sessionStorage.getItem("laurusGHtok") ? "•••••• (déjà enregistré)" : "github_pat_…";
+    var foot=E("div","ed-foot"), c=E("button","admin-btn ghost","Fermer"), b=E("button","admin-btn primary","Enregistrer");
+    foot.append(c,E("span","sp"),b); ed.append(foot);
+    c.onclick=function(){ ov.remove(); }; ov.onclick=function(e){ if(e.target===ov) ov.remove(); };
+    b.onclick=function(){
+      localStorage.setItem("laurusGH_owner",iOwner.value.trim());
+      localStorage.setItem("laurusGH_repo",iRepo.value.trim());
+      localStorage.setItem("laurusGH_branch",iBranch.value.trim()||"main");
+      if(iTok.value.trim()) sessionStorage.setItem("laurusGHtok",iTok.value.trim());
+      ov.remove(); toast("Réglages enregistrés");
+    };
+    ov.append(ed); document.body.appendChild(ov);
+  }
+  function b64(str){ return btoa(unescape(encodeURIComponent(str))); }
+  function publishFlow(){
+    var tok=sessionStorage.getItem("laurusGHtok");
+    if(!tok){ toast("Ajoutez d’abord un token dans Réglages",true); ghSettings(); return; }
+    var owner=ghGet("owner",GH.owner), repo=ghGet("repo",GH.repo), branch=ghGet("branch",GH.branch), path=GH.path;
+    var api="https://api.github.com/repos/"+owner+"/"+repo+"/contents/"+path;
+    var headers={ Authorization:"Bearer "+tok, Accept:"application/vnd.github+json" };
+    toast("Publication en cours…");
+    var htmlOut;
+    buildUpdatedHTML().then(function(html){
+      htmlOut=html;
+      return fetch(api+"?ref="+encodeURIComponent(branch),{headers:headers});
+    }).then(function(cur){
+      if(cur.ok) return cur.json().then(function(j){ return j.sha; });
+      if(cur.status===404) return null;
+      throw new Error("Lecture du fichier échouée ("+cur.status+")");
+    }).then(function(sha){
+      var body={ message:"Mise à jour du catalogue via l’éditeur", content:b64(htmlOut), branch:branch };
+      if(sha) body.sha=sha;
+      return fetch(api,{ method:"PUT", headers:headers, body:JSON.stringify(body) });
+    }).then(function(put){
+      if(!put.ok) return put.text().then(function(){ throw new Error("Publication refusée ("+put.status+") — vérifiez le token et ses permissions"); });
+      setDirty(false); toast("Publié ✓ — le site se met à jour dans ~1 min");
+    }).catch(function(e){ toast(e.message,true); });
+  }
+
+  /* ---- init ---- */
+  buildBar();
+  decorate();
+  window.addEventListener("hashchange", function(){ setTimeout(decorate,0); });
+})();
+
 </script>
 </body>
 </html>
