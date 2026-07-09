@@ -89,14 +89,14 @@
   .empty{text-align:center;color:var(--ink-faint);padding:48px 20px}
   .empty b{display:block;font-weight:700;color:var(--ink-soft);font-size:16px;margin-bottom:4px}
 
-  .qr-card{margin-top:22px;background:#141719;color:#fff;border-radius:18px;padding:18px;display:flex;gap:16px;align-items:center}
-  .qr-box{flex:none;width:88px;height:88px;background:#fff;border-radius:10px;padding:7px;display:grid;place-items:center}
-  .qr-box canvas,.qr-box img{width:100%!important;height:100%!important}
-  .qr-fallback{font:600 9px var(--mono);color:#141719;text-align:center;line-height:1.3}
-  .qr-txt b{font-weight:700;font-size:14.5px;display:block}
-  .qr-txt p{margin:5px 0 0;font-size:12.5px;color:#B9BFC4;line-height:1.45}
-  .qr-txt code{font:500 11.5px var(--mono);color:#fff;background:rgba(255,255,255,.13);padding:1px 6px;border-radius:5px}
-
+ .qr-card{margin-top:22px;background:#141719;color:#fff;border-radius:18px;padding:18px;display:flex;gap:16px;align-items:center}
+.qr-box{flex:none;width:88px;height:88px;background:#fff;border-radius:10px;padding:7px;display:grid;place-items:center}
+.qr-box canvas,.qr-box img{width:100%!important;height:100%!important}
+.qr-fallback{font:600 9px var(--mono);color:#141719;text-align:center;line-height:1.3}
+.qr-txt b{font-weight:700;font-size:14.5px;display:block}
+.qr-txt p{margin:5px 0 0;font-size:12.5px;color:#B9BFC4;line-height:1.45}
+.qr-txt code{font:500 11.5px var(--mono);color:#fff;background:rgba(255,255,255,.13);padding:1px 6px;border-radius:5px}
+  
   .detail{display:none}
   .back{display:inline-flex;align-items:center;gap:6px;border:none;background:none;color:var(--ink-soft);font:500 14px var(--font);cursor:pointer;padding:14px 2px 8px}
   .hero{background:var(--brand);color:var(--on-brand);border-radius:20px;padding:18px 20px;display:flex;gap:18px;align-items:center;margin-top:4px}
@@ -197,12 +197,20 @@
       <div class="empty" id="empty" hidden><b>Aucun résultat</b>Essayez un autre produit, symptôme ou actif.</div>
 
       <div class="qr-card">
-        <div class="qr-box" id="qrBox"><span class="qr-fallback">SCAN<br>CATALOGUE</span></div>
-        <div class="qr-txt">
-          <b>Ce que le représentant imprime</b>
-          <p>Un seul QR ouvre ce catalogue. Il pointe vers <code>posologie.laurus-pharma.com</code> — jamais une version figée, donc aucune réimpression lors d'une mise à jour.</p>
-        </div>
-      </div>
+  <div class="qr-box" id="qrBox">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29"
+         shape-rendering="crispEdges" fill="#141719" width="100%" height="100%">
+      <rect x="0" y="0" width="7" height="1"></rect>
+      … ~300 <rect> elements — the QR matrix, ~10 KB total …
+    </svg>
+  </div>
+  <div class="qr-txt">
+    <b>Ce que le représentant imprime</b>
+    <p>Un seul QR ouvre ce catalogue. Il pointe vers
+       <code>fayrouzbensoui.github.io/laurus</code> — jamais une version figée,
+       donc aucune réimpression lors d'une mise à jour.</p>
+  </div>
+</div>
     </div>
 
     <div id="detailView" class="detail"></div>
